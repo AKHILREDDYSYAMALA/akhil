@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
+import { assignsearchword } from "../utils/searchwordSlice";
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -36,9 +37,21 @@ const Head = () => {
     );
   };
 
+  const handleSearch = () => {
+    dispatch(assignsearchword(searchQuery));
+    setShowSuggestions(false);
+  };
+
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
+
+  const handleItemClick = (e) => {
+    const innerHTML = e.target.innerHTML;
+    //console.log(innerHTML);
+    dispatch(assignsearchword(innerHTML));
+  };
+
   return (
     <div className="grid grid-flow-col p-5 m-2 shadow-lg">
       <div className="flex col-span-1 ">
@@ -62,18 +75,27 @@ const Head = () => {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
+              setShowSuggestions(true);
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setShowSuggestions(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           ></input>
           <button className="border border-gray-400 p-2 px-5 rounded-r-full z-10">
             🔍
           </button>
           {showSuggestions && (
-            <div className="absolute bg-white py-0 mt-11  w-[37rem] shadow-lg-rounded border-gray-100">
+            <div
+              className="absolute bg-white py-0 mt-11  w-[37rem] shadow-lg-rounded border-gray-100"
+              onMouseDown={handleItemClick}
+            >
               <ul>
-                {suggestions.map((s) => (
-                  <li className="py-2 px-3 shadow-sm hover:bg-gray-100">
+                {suggestions.map((s, i) => (
+                  <li key={i} className="py-2 px-3 shadow-sm hover:bg-gray-100">
                     🔍 {s}
                   </li>
                 ))}
