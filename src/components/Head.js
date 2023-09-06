@@ -50,6 +50,7 @@ const Head = () => {
     const innerHTML = e.target.innerHTML;
     //console.log(innerHTML);
     dispatch(assignsearchword(innerHTML));
+    setSearchQuery(innerHTML);
   };
 
   return (
