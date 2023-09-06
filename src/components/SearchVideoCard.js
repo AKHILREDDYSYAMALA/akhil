@@ -1,11 +1,19 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { toggleMenu } from "../utils/appSlice";
 
 const SearchVideoCard = ({ info }) => {
   const { snippet, id } = info;
   const { channelTitle, title, thumbnails } = snippet;
+  const dispatch = useDispatch();
 
   return (
-    <div className="p-2 m-2 w-72 shadow-lg h-[17rem]">
+    <div
+      className="p-2 m-2 w-72 shadow-lg h-[17rem]"
+      onLoad={() => {
+        dispatch(toggleMenu());
+      }}
+    >
       <img
         className="rounded-lg"
         src={thumbnails.medium.url}
